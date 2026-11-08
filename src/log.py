@@ -1,16 +1,24 @@
 import datetime
+import os
+import sys
+
+COLOR_ENABLED = sys.stdout.isatty() and "NO_COLOR" not in os.environ
 
 palette = {
-    "错误": ((255, 46, 99),  (255, 46, 99)),
+    "错误": ((255, 46, 99), (255, 46, 99)),
     "警告": ((249, 237, 105), (249, 237, 105)),
     "信息": ((48, 227, 202), (255, 255, 255)),
-    "调试": ((82, 97, 107),  (82, 97, 107)),
+    "调试": ((82, 97, 107), (82, 97, 107)),
 }
-reset = "\033[0m"
+RESET = "\033[0m"
+
 
 def tint(color, text):
+    if not COLOR_ENABLED:
+        return text
     r, g, b = color
-    return f"\033[38;2;{r};{g};{b}m{text}{reset}"
+    return f"\033[38;2;{r};{g};{b}m{text}{RESET}"
+
 
 def write(level, message):
     timestamp = datetime.datetime.now().strftime("%Y/%m/%d %H:%M")
@@ -18,8 +26,19 @@ def write(level, message):
         file.write(f"{timestamp} {level} {message}\n")
     label, text = palette[level]
     print(f"{timestamp} {tint(label, level)} {tint(text, message)}")
-def debug(message): write("调试", message)
-def info(message):  write("信息", message)
-def warn(message):  write("警告", message)
-def error(message): write("错误", message)
 
+
+def debug(message):
+    write("调试", message)
+
+
+def info(message):
+    write("信息", message)
+
+
+def warn(message):
+    write("警告", message)
+
+
+def error(message):
+    write("错误", message)
