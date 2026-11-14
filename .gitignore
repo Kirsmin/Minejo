@@ -1,0 +1,9 @@
+# 日志
+Log.txt
+
+# 缓存的资源数据
+Resource/
+
+# Python
+__pycache__/
+*.pyc
